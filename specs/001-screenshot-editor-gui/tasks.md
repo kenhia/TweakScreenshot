@@ -25,14 +25,14 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 **Purpose**: Project initialization, dependencies, tooling, and basic structure
 
-- [ ] T001 Create project structure per plan.md (src/ui/, src/core/, src/models/, src/utils/, tests/)
-- [ ] T002 Initialize Python project with uv in pyproject.toml (dependencies: PySide6, Pillow, pytest, pytest-qt)
-- [ ] T003 [P] Configure ruff for formatting and linting in pyproject.toml
-- [ ] T004 [P] Create Invoke-Build tasks file .tasks.build.ps1 (format, lint, test commands)
-- [ ] T005 [P] Setup pytest configuration in pyproject.toml (test paths, markers)
-- [ ] T006 [P] Create pre-commit validation script .specify/scripts/powershell/pre-commit-check.ps1
-- [ ] T007 Create README.md with quick-start guide (install, run, test)
-- [ ] T008 **Stage Commit**: "chore(setup): initialize Python project with PySide6, Pillow, pytest"
+- [X] T001 Create project structure per plan.md (src/ui/, src/core/, src/models/, src/utils/, tests/)
+- [X] T002 Initialize Python project with uv in pyproject.toml (dependencies: PySide6, Pillow, pytest, pytest-qt)
+- [X] T003 [P] Configure ruff for formatting and linting in pyproject.toml
+- [X] T004 [P] Create Invoke-Build tasks file .tasks.build.ps1 (format, lint, test commands)
+- [X] T005 [P] Setup pytest configuration in pyproject.toml (test paths, markers)
+- [X] T006 [P] Create pre-commit validation script .specify/scripts/powershell/pre-commit-check.ps1
+- [X] T007 Create README.md with quick-start guide (install, run, test)
+- [X] T008 **Stage Commit**: "chore(setup): initialize Python project with PySide6, Pillow, pytest"
 
 **Constitution Compliance**: Establishes Code Quality Standards (Principle III) infrastructure per constitution.
 
