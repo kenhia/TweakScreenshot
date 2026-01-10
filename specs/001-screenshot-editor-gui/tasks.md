@@ -44,13 +44,13 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 Create base Image model in src/models/image_model.py (original_data, current_data, validation)
-- [ ] T010 [P] Create EditHistory model in src/models/edit_history.py (operations stack, add_operation, clear methods)
-- [ ] T011 [P] Create utility validators in src/utils/validators.py (image dimensions, file paths, format validation)
-- [ ] T012 [P] Create logger configuration in src/utils/logger.py (file logging per Constitution V)
-- [ ] T013 [P] Setup error handling utilities in src/utils/error_handlers.py (QMessageBox wrappers per Constitution IV)
-- [ ] T014 Create main window skeleton in src/ui/main_window.py (QMainWindow, menu bar, status bar)
-- [ ] T015 Run format → lint → unit tests for foundation code
+- [X] T009 Create base Image model in src/models/image_model.py (original_data, current_data, validation)
+- [X] T010 [P] Create EditHistory model in src/models/edit_history.py (operations stack, add_operation, clear methods)
+- [X] T011 [P] Create utility validators in src/utils/validators.py (image dimensions, file paths, format validation)
+- [X] T012 [P] Create logger configuration in src/utils/logger.py (file logging per Constitution V)
+- [X] T013 [P] Setup error handling utilities in src/utils/error_handlers.py (QMessageBox wrappers per Constitution IV)
+- [X] T014 Create main window skeleton in src/ui/main_window.py (QMainWindow, menu bar, status bar)
+- [X] T015 Run format → lint → unit tests for foundation code
 - [ ] T016 **Stage Commit**: "chore(foundation): add base models, utilities, main window skeleton"
 
 **Constitution Compliance**: Foundation includes UX error patterns (Principle IV) and performance logging (Principle V).
