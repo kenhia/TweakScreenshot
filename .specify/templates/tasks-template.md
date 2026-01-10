@@ -49,8 +49,14 @@ description: "Task list template for feature implementation"
 **Purpose**: Project initialization and basic structure
 
 - [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T002 Initialize [language] project with dependencies per constitution tooling (Python: uv, PowerShell: Invoke-Build, etc.)
+- [ ] T003 [P] Configure language-specific formatter (Python: ruff format, PowerShell: VS Code extension)
+- [ ] T004 [P] Configure language-specific linter (Python: ruff check, PowerShell: PSScriptAnalyzer)
+- [ ] T005 [P] Setup pre-commit hooks or validation script (format → lint → tests)
+- [ ] T006 [P] Configure testing framework (Python: pytest, PowerShell: Pester)
+- [ ] T007 [P] Initialize version control with stage/phase commit strategy documented
+
+**Constitution Compliance**: Setup phase establishes Code Quality Standards (Principle III) infrastructure.
 
 ---
 
@@ -62,14 +68,20 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T008 Setup database schema and migrations framework
+- [ ] T009 [P] Implement authentication/authorization framework
+- [ ] T010 [P] Setup API routing and middleware structure
+- [ ] T011 Create base models/entities that all stories depend on
+- [ ] T012 Configure error handling and logging infrastructure (Constitution IV: UX consistency)
+- [ ] T013 Setup environment configuration management
+- [ ] T014 [P] Define performance monitoring/instrumentation strategy (Constitution V)
+- [ ] T015 [P] Create help/documentation structure (Constitution IV: UX consistency)
+
+**Constitution Compliance**: Foundation includes UX patterns (Principle IV) and performance instrumentation (Principle V).
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+
+**Pre-Commit Gate**: Run format → lint → all tests before committing Phase 2 code.
 
 ---
 
@@ -79,23 +91,41 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 1 (MANDATORY per Constitution II: TDD) ✅
 
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+> **CONSTITUTION REQUIREMENT: TDD (Principle II) - Tests written FIRST, MUST fail initially**
+>
+> Workflow: Write test → Get user approval → Verify test fails (RED) → Implement → Test passes (GREEN) → Refactor
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T016 [P] [US1] Write contract test for [endpoint/interface] in tests/contract/test_[name].[ext]
+  - **TDD Gate**: Test MUST fail before implementation
+- [ ] T017 [P] [US1] Write integration test for [user journey] in tests/integration/test_[name].[ext]
+  - **TDD Gate**: Test MUST fail before implementation
+- [ ] T018 [P] [US1] Write unit tests for [business logic] in tests/unit/test_[name].[ext]
+  - **TDD Gate**: Tests MUST fail before implementation
+
+**Checkpoint - RED**: All tests written and FAILING. User approval obtained. Ready for implementation.
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T019 [P] [US1] Create [Entity1] model in src/models/[entity1].[ext]
+- [ ] T020 [P] [US1] Create [Entity2] model in src/models/[entity2].[ext]
+- [ ] T021 [US1] Implement [Service] in src/services/[service].[ext] (depends on T019, T020)
+- [ ] T022 [US1] Implement [endpoint/feature] in src/[location]/[file].[ext]
+- [ ] T023 [US1] Add validation and error handling (Constitution IV: UX - clear error messages)
+- [ ] T024 [US1] Add logging/instrumentation (Constitution V: Performance monitoring)
+- [ ] T025 [US1] Add help text/documentation for user-facing components (Constitution IV: UX)
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+**Checkpoint - GREEN**: All tests now PASSING. Implementation complete.
+
+### Code Quality & Refactor for User Story 1
+
+- [ ] T026 [US1] Run pre-commit checks: format code → lint code → run all tests (Constitution III)
+- [ ] T027 [US1] Refactor for clarity and performance if needed (Constitution III: Complexity, V: Performance)
+- [ ] T028 [US1] Document public interfaces with examples (Constitution IV: UX documentation)
+- [ ] T029 [US1] **Stage Commit**: Commit User Story 1 with message "feat(US1): [description]"
+
+**Final Checkpoint**: User Story 1 fully functional, tested, documented, and committed. Phase transition check complete.
 
 ---
 
@@ -105,7 +135,9 @@ Examples of foundational tasks (adjust based on your project):
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
+**Phase Transition Gate**: Before starting US2, verify US1 fully complete (all tests pass, code committed, docs updated).
+
+### Tests for User Story 2 (MANDATORY per Constitution II: TDD) ✅
 
 - [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py

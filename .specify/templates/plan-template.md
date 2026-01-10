@@ -31,7 +31,42 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**I. Personal Project Confirmation**: ✅ Confirmed as personal project (required before planning)
+
+**II. Test-Driven Development (TDD)**: 
+- [ ] Tests written first for all functionality
+- [ ] Red-Green-Refactor cycle enforced
+- [ ] Contract tests planned for public interfaces
+- [ ] Unit tests planned for business logic
+
+**III. Code Quality Standards**:
+- [ ] Language-specific formatter configured (see constitution for tooling)
+- [ ] Linter configured with zero-error policy
+- [ ] Type system leveraged (if applicable)
+- [ ] Documentation requirements defined
+- [ ] Pre-commit hooks planned or manual validation process defined
+
+**IV. User Experience Consistency**:
+- [ ] Interface patterns defined (CLI structure, API conventions, UI patterns)
+- [ ] Error message strategy defined (clear, actionable)
+- [ ] Documentation plan includes quick-start, examples, API reference
+- [ ] Help/guidance mechanisms specified
+- [ ] Accessibility considerations addressed (if UI/UX component)
+
+**V. Performance Requirements**:
+- [ ] Response time targets defined (e.g., <200ms UI, <1s API)
+- [ ] Throughput targets defined (if applicable)
+- [ ] Resource constraints specified (memory, CPU)
+- [ ] Scalability approach documented
+- [ ] Performance monitoring/instrumentation planned
+
+**Development Workflow Compliance**:
+- [ ] Stage/phase commit strategy defined
+- [ ] Pre-commit checks automated or process documented
+- [ ] Phase transition checklist understood and agreed
+- [ ] Language-specific tooling confirmed (Python: uv/ruff, PowerShell: Invoke-Build/Pester, etc.)
+
+**Complexity Justification**: If any principle cannot be met, document in "Complexity Tracking" section below.
 
 ## Project Structure
 
