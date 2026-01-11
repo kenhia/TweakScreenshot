@@ -39,9 +39,10 @@ def qimage_to_pil(qimage: QImage) -> PILImage.Image:
     width = qimage.width()
     height = qimage.height()
     ptr = qimage.constBits()
+    bytes_per_line = qimage.bytesPerLine()  # Account for stride/padding
 
-    # Create PIL Image from bytes
-    img = PILImage.frombytes("RGB", (width, height), ptr.tobytes(), "raw", "RGB", 0, 1)
+    # Create PIL Image from bytes with proper stride
+    img = PILImage.frombytes("RGB", (width, height), ptr.tobytes(), "raw", "RGB", bytes_per_line, 1)
     return img
 
 
