@@ -102,9 +102,9 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 ### Code Quality & Refactor for US1
 
 - [X] T033 [US1] Run pre-commit checks: ruff format → ruff check → pytest (Constitution III)
-- [ ] T034 [US1] Refactor for clarity if needed (DRY principle, extract common patterns)
-- [ ] T035 [US1] Add docstrings to all public methods (Constitution IV: documentation)
-- [ ] T036 [US1] **Stage Commit**: "feat(US1): implement load and display screenshot from file/clipboard"
+- [X] T034 [US1] Refactor for clarity if needed (DRY principle, extract common patterns)
+- [X] T035 [US1] Add docstrings to all public methods (Constitution IV: documentation)
+- [X] T036 [US1] **Stage Commit**: "feat(US1): implement load and display screenshot from file/clipboard"
 
 **Final Checkpoint**: US1 fully functional, tested, documented, and committed. Ready for next story.
 
@@ -120,39 +120,39 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 ### Tests for US5 (MANDATORY per Constitution II: TDD) ✅
 
-- [ ] T037 [P] [US5] Write contract test for ImageEditor.save_to_file() in tests/contract/test_image_editor_contract.py
+- [X] T037 [P] [US5] Write contract test for ImageEditor.save_to_file() in tests/contract/test_image_editor_contract.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T038 [P] [US5] Write unit test for file_ops.save_image_to_file() in tests/unit/test_file_ops.py
+- [X] T038 [P] [US5] Write unit test for file_ops.save_image_to_file() in tests/unit/test_file_ops.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T039 [P] [US5] Write unit test for file_ops.check_disk_space() in tests/unit/test_file_ops.py
+- [X] T039 [P] [US5] Write unit test for file_ops.check_disk_space() in tests/unit/test_file_ops.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T040 [P] [US5] Write integration test for "Save workflow with PNG format" in tests/integration/test_ui_workflows.py
+- [X] T040 [P] [US5] Write integration test for "Save workflow with PNG format" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T041 [P] [US5] Write integration test for "Save workflow with JPG format" in tests/integration/test_ui_workflows.py
+- [X] T041 [P] [US5] Write integration test for "Save workflow with JPG format" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
 
 **Checkpoint - RED**: All US5 tests written and FAILING.
 
 ### Implementation for US5
 
-- [ ] T042 [P] [US5] Implement save_image_to_file() in src/core/file_ops.py (PIL save, format selection, quality for JPG)
-- [ ] T043 [P] [US5] Implement check_disk_space() in src/core/file_ops.py (estimate file size, validate space)
-- [ ] T044 [P] [US5] Implement estimate_file_size() in src/core/file_ops.py (approximate based on dimensions/format)
-- [ ] T045 [US5] Implement ImageEditor.save_to_file() in src/core/image_editor.py (calls file_ops, clears unsaved flag)
-- [ ] T046 [US5] Integrate File > Save As menu action in src/ui/main_window.py (QFileDialog with format filter)
-- [ ] T047 [US5] Add overwrite confirmation dialog (Constitution IV: UX consistency)
-- [ ] T048 [US5] Add disk space check before save with error dialog (edge case handling)
-- [ ] T049 [US5] Add JPG quality selection dialog (default 90%)
-- [ ] T050 [US5] Add logging for save operations (Constitution V: monitoring)
+- [X] T042 [P] [US5] Implement save_image_to_file() in src/core/file_ops.py (PIL save, format selection, quality for JPG)
+- [X] T043 [P] [US5] Implement check_disk_space() in src/core/file_ops.py (estimate file size, validate space)
+- [X] T044 [P] [US5] Implement estimate_file_size() in src/core/file_ops.py (approximate based on dimensions/format)
+- [X] T045 [US5] Implement ImageEditor.save_to_file() in src/core/image_editor.py (calls file_ops, clears unsaved flag)
+- [X] T046 [US5] Integrate File > Save As menu action in src/ui/main_window.py (QFileDialog with format filter)
+- [X] T047 [US5] Add overwrite confirmation dialog (Constitution IV: UX consistency)
+- [X] T048 [US5] Add disk space check before save with error dialog (edge case handling)
+- [X] T049 [US5] Add JPG quality selection dialog (default 90%)
+- [X] T050 [US5] Add logging for save operations (Constitution V: monitoring)
 
 **Checkpoint - GREEN**: All US5 tests PASSING. US1 + US5 = functional MVP.
 
 ### Code Quality & Refactor for US5
 
-- [ ] T051 [US5] Run pre-commit checks: ruff format → ruff check → pytest
-- [ ] T052 [US5] Refactor file_ops module if needed (common error handling patterns)
-- [ ] T053 [US5] Add docstrings and update README with save examples
-- [ ] T054 [US5] **Stage Commit**: "feat(US5): implement save screenshot to PNG/JPG with disk space check"
+- [X] T051 [US5] Run pre-commit checks: ruff format → ruff check → pytest
+- [X] T052 [US5] Refactor file_ops module if needed (common error handling patterns)
+- [X] T053 [US5] Add docstrings and update README with save examples
+- [X] T054 [US5] **Stage Commit**: "feat(US5): implement save screenshot to PNG/JPG with disk space check"
 
 **MVP Milestone**: Application can now load, display, and save screenshots - delivers immediate value!
 

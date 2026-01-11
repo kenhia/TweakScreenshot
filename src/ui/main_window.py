@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QFileDialog, QMainWindow, QMenuBar, QStatusBar
 from core.clipboard import pil_to_qimage
 from core.image_editor import ImageEditor
 from ui.widgets.image_viewer import ImageViewer
-from utils.error_handlers import show_error_dialog
+from utils.error_handlers import show_confirmation_dialog, show_error_dialog
 from utils.logger import log_operation, setup_logger
 
 
@@ -109,6 +109,7 @@ class MainWindow(QMainWindow):
     def _connect_signals(self) -> None:
         """Connect menu actions to handlers."""
         self.action_open.triggered.connect(self._handle_open_file)
+        self.action_save_as.triggered.connect(self._handle_save_as)
 
     def update_status(self, message: str) -> None:
         """Update status bar message.
@@ -221,3 +222,123 @@ class MainWindow(QMainWindow):
         # Enable actions when image is loaded
         self.action_save_as.setEnabled(has_image)
         self.action_resize.setEnabled(has_image)
+
+    def _handle_save_as(self) -> None:
+        """Handle File > Save As action."""
+        if not self._editor.has_image():
+            return
+
+        # Open save dialog with format filters
+        file_path, selected_filter = QFileDialog.getSaveFileName(
+            self,
+            "Save Image",
+            "",
+            "PNG Files (*.png);;JPEG Files (*.jpg *.jpeg);;BMP Files (*.bmp);;All Files (*.*)",
+        )
+
+        if not file_path:
+            return  # User cancelled
+
+        path_obj = Path(file_path)
+
+        # T047: Check if file exists and confirm overwrite
+        if path_obj.exists():
+            from PySide6.QtWidgets import QMessageBox
+
+            reply = show_confirmation_dialog(
+                self,
+                "Overwrite File?",
+                f"File '{path_obj.name}' already exists.",
+                "Do you want to overwrite it?",
+            )
+            if reply != QMessageBox.StandardButton.Yes:
+                return  # User cancelled overwrite
+
+        # Determine format from filter or extension
+        format_str = self._get_format_from_filter(selected_filter, path_obj)
+
+        # T049: Get JPG quality if saving as JPEG
+        quality = 90  # Default
+        if format_str == "JPEG":
+            from PySide6.QtWidgets import QInputDialog
+
+            quality, ok = QInputDialog.getInt(
+                self,
+                "JPEG Quality",
+                "Select JPEG quality (1-100):",
+                90,  # Default value
+                1,  # Minimum
+                100,  # Maximum
+                1,  # Step
+            )
+            if not ok:
+                return  # User cancelled
+
+        # T048: Check disk space
+        from core.file_ops import check_disk_space, estimate_file_size
+
+        pil_img = self._editor.get_current_image()
+        if pil_img:
+            estimated_size = estimate_file_size(pil_img.width, pil_img.height, format_str)
+            if not check_disk_space(path_obj, estimated_size):
+                details = (
+                    f"Required: {estimated_size / 1024:.1f} KB\n"
+                    "Please free up disk space and try again."
+                )
+                show_error_dialog(
+                    self,
+                    "Insufficient Disk Space",
+                    "Cannot save image due to insufficient disk space.",
+                    details,
+                )
+                return
+
+        # T050: Save with logging
+        try:
+            start_time = time.time()
+            self._editor.save_to_file(path_obj, format_str, quality)
+            duration_ms = (time.time() - start_time) * 1000
+
+            self._logger.info(
+                f"Saved image to {file_path} (format={format_str}, quality={quality})"
+            )
+            log_operation(self._logger, "save_to_file", duration_ms)
+
+            self.update_status(f"Saved to {path_obj.name}")
+
+        except Exception as e:
+            self._logger.error(f"Failed to save image: {e}")
+            show_error_dialog(
+                self,
+                "Cannot Save Image",
+                "Failed to save image to file.",
+                f"Error: {e}",
+            )
+
+    def _get_format_from_filter(self, selected_filter: str, path_obj: Path) -> str:
+        """Determine image format from filter string or file extension.
+
+        Args:
+            selected_filter: Filter string from QFileDialog
+            path_obj: File path object
+
+        Returns:
+            Format string (PNG, JPEG, BMP)
+        """
+        # Try to extract format from selected filter
+        if "PNG" in selected_filter.upper():
+            return "PNG"
+        elif "JPEG" in selected_filter.upper() or "JPG" in selected_filter.upper():
+            return "JPEG"
+        elif "BMP" in selected_filter.upper():
+            return "BMP"
+
+        # Fall back to file extension
+        ext = path_obj.suffix.upper().lstrip(".")
+        if ext == "JPG":
+            return "JPEG"
+        elif ext in ("PNG", "BMP"):
+            return ext
+        else:
+            # Default to PNG
+            return "PNG"

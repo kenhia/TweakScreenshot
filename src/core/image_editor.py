@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image as PILImage
 
 from core.clipboard import load_image_from_clipboard
-from core.file_ops import load_image_from_file
+from core.file_ops import load_image_from_file, save_image_to_file
 from models.edit_history import EditHistory
 from models.image_model import Image
 
@@ -77,6 +77,33 @@ class ImageEditor:
 
         # Initialize edit history
         self._edit_history = EditHistory(original_image=pil_img.copy())
+
+    def save_to_file(self, file_path: Path, format_str: str, quality: int = 90) -> None:
+        """Save current image to file system.
+
+        Args:
+            file_path: Destination file path
+            format_str: Image format (PNG, JPEG, BMP)
+            quality: JPG quality (1-100), default 90. Ignored for PNG/BMP.
+
+        Raises:
+            ValueError: If no image loaded or format not supported
+            IOError: If save fails
+
+        Postconditions:
+            - has_unsaved_changes() returns False
+            - get_file_path() returns file_path
+        """
+        if self._image is None:
+            raise ValueError("No image loaded. Load an image before saving.")
+
+        # Save current image data
+        save_image_to_file(self._image.current_data, file_path, format_str, quality)
+
+        # Update image model with new file path and format
+        self._image.file_path = file_path
+        self._image.format = format_str
+        self._image.has_unsaved_changes = False
 
     def has_image(self) -> bool:
         """Check if an image is currently loaded.

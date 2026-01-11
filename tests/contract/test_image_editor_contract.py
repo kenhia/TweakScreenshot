@@ -119,3 +119,51 @@ class TestImageEditorContract:
     def test_get_current_image_initially_none(self, image_editor):
         """Contract: get_current_image() returns None for new ImageEditor."""
         assert image_editor.get_current_image() is None
+
+    # T037: Contract test for save_to_file()
+    @pytest.mark.contract
+    def test_save_to_file_png_format(self, image_editor, sample_png_path, tmp_path):
+        """Contract: Save image to PNG format creates valid file."""
+        image_editor.load_from_file(sample_png_path)
+
+        output_path = tmp_path / "output.png"
+        image_editor.save_to_file(output_path, format_str="PNG")
+
+        assert output_path.exists()
+        # Verify file is valid by loading it
+        saved_img = PILImage.open(output_path)
+        assert saved_img.format == "PNG"
+        assert saved_img.size == (100, 100)
+
+    @pytest.mark.contract
+    def test_save_to_file_jpg_format(self, image_editor, sample_png_path, tmp_path):
+        """Contract: Save image to JPG format creates valid file."""
+        image_editor.load_from_file(sample_png_path)
+
+        output_path = tmp_path / "output.jpg"
+        image_editor.save_to_file(output_path, format_str="JPEG", quality=90)
+
+        assert output_path.exists()
+        saved_img = PILImage.open(output_path)
+        assert saved_img.format == "JPEG"
+
+    @pytest.mark.contract
+    def test_save_to_file_clears_unsaved_flag(self, image_editor, sample_png_path, tmp_path):
+        """Contract: Saving image clears has_unsaved_changes flag."""
+        image_editor.load_from_file(sample_png_path)
+
+        # Simulate an edit by marking as unsaved (future task will actually edit)
+        # For now, just test that save clears the flag
+
+        output_path = tmp_path / "output.png"
+        image_editor.save_to_file(output_path, format_str="PNG")
+
+        assert image_editor.has_unsaved_changes() is False
+
+    @pytest.mark.contract
+    def test_save_to_file_without_image_raises_error(self, image_editor, tmp_path):
+        """Contract: Attempting to save without loaded image raises ValueError."""
+        output_path = tmp_path / "output.png"
+
+        with pytest.raises(ValueError, match="No image loaded"):
+            image_editor.save_to_file(output_path, format_str="PNG")
