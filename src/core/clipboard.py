@@ -59,7 +59,10 @@ def pil_to_qimage(pil_img: PILImage.Image) -> QImage:
         pil_img = pil_img.convert("RGB")
 
     data = pil_img.tobytes("raw", "RGB")
-    qimage = QImage(data, pil_img.width, pil_img.height, QImage.Format.Format_RGB888)
+    bytes_per_line = 3 * pil_img.width  # RGB = 3 bytes per pixel
+    qimage = QImage(
+        data, pil_img.width, pil_img.height, bytes_per_line, QImage.Format.Format_RGB888
+    )
 
     # Make a copy to avoid data being freed
     return qimage.copy()

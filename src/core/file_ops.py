@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 from PIL import Image as PILImage
+from PIL import ImageOps
 
 from utils.validators import validate_file_path, validate_image_format
 
@@ -26,6 +27,9 @@ def load_image_from_file(file_path: Path) -> PILImage.Image:
 
     try:
         img = PILImage.open(file_path)
+
+        # Apply EXIF orientation (fixes rotated JPG images from cameras/phones)
+        img = ImageOps.exif_transpose(img) or img
 
         # Convert to RGB or RGBA if needed
         if img.mode not in ("RGB", "RGBA"):
