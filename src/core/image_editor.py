@@ -237,3 +237,57 @@ class ImageEditor:
         # Clear edit history
         if self._edit_history:
             self._edit_history.clear()
+
+    def resize(self, width: int | None, height: int | None) -> None:
+        """Resize image to new dimensions.
+
+        Args:
+            width: Target width in pixels (None to auto-calculate from height)
+            height: Target height in pixels (None to auto-calculate from width)
+
+        Raises:
+            ValueError: If no image loaded, or both/neither dimensions provided,
+                       or dimensions are not positive
+
+        Postconditions:
+            - Image resized to new dimensions using LANCZOS resampling
+            - has_unsaved_changes() returns True
+            - Edit operation recorded in history
+        """
+        if self._image is None:
+            raise ValueError("No image loaded. Load an image before resizing.")
+
+        current_img = self._image.current_data
+
+        # Calculate missing dimension if only one provided (maintain aspect ratio)
+        if width is not None and height is None:
+            # Calculate height from width
+            aspect_ratio = current_img.height / current_img.width
+            height = int(width * aspect_ratio)
+        elif height is not None and width is None:
+            # Calculate width from height
+            aspect_ratio = current_img.width / current_img.height
+            width = int(height * aspect_ratio)
+        elif width is None and height is None:
+            raise ValueError("Must provide at least one dimension (width or height)")
+
+        # Validate dimensions
+        from utils.validators import validate_resize_dimensions
+
+        validate_resize_dimensions(width, height)
+
+        # Resize using LANCZOS filter for high quality
+        resized_img = current_img.resize((width, height), PILImage.Resampling.LANCZOS)
+
+        # Update image model
+        self._image.current_data = resized_img
+        self._image.has_unsaved_changes = True
+
+        # Record operation in history
+        if self._edit_history:
+            operation = EditOperation(
+                type="resize",
+                timestamp=datetime.now(UTC),
+                parameters={"width": width, "height": height},
+            )
+            self._edit_history.add_operation(operation)

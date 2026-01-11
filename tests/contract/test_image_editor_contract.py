@@ -274,3 +274,46 @@ class TestImageEditorContract:
         """Contract: Attempting to revert without loaded image raises ValueError."""
         with pytest.raises(ValueError, match="No image loaded"):
             image_editor.revert()
+
+    # T081: Contract test for ImageEditor.resize()
+    def test_resize_with_new_dimensions(self, image_editor, sample_png_path):
+        """Contract: Resizing with new dimensions changes image size and marks unsaved."""
+        # Load image (100x100)
+        image_editor.load_from_file(sample_png_path)
+
+        # Resize to 200x150
+        image_editor.resize(width=200, height=150)
+
+        # Postcondition: Image is now 200x150
+        img = image_editor.get_current_image()
+        assert img.size == (200, 150)
+
+        # Postcondition: Unsaved changes flag is set
+        assert image_editor.has_unsaved_changes() is True
+
+    def test_resize_maintains_aspect_ratio(self, image_editor, sample_png_path):
+        """Contract: Resizing with only width maintains aspect ratio."""
+        # Load image (100x100)
+        image_editor.load_from_file(sample_png_path)
+
+        # Resize to width=200, height should auto-calculate to 200 (square)
+        image_editor.resize(width=200, height=None)
+
+        # Postcondition: Image is 200x200 (aspect ratio maintained)
+        img = image_editor.get_current_image()
+        assert img.size == (200, 200)
+
+    def test_resize_with_invalid_dimensions_raises_error(self, image_editor, sample_png_path):
+        """Contract: Resizing with zero or negative dimensions raises ValueError."""
+        image_editor.load_from_file(sample_png_path)
+
+        with pytest.raises(ValueError, match="positive"):
+            image_editor.resize(width=0, height=100)
+
+        with pytest.raises(ValueError, match="positive"):
+            image_editor.resize(width=100, height=-10)
+
+    def test_resize_without_image_raises_error(self, image_editor):
+        """Contract: Attempting to resize without loaded image raises ValueError."""
+        with pytest.raises(ValueError, match="No image loaded"):
+            image_editor.resize(width=100, height=100)

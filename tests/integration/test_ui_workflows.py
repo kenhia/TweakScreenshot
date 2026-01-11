@@ -380,3 +380,74 @@ class TestRevertWorkflows:
         # After revert, should disable
         editor.revert()
         assert editor.has_unsaved_changes() is False
+
+
+# T083-T084: Integration tests for resize workflows
+@pytest.mark.integration
+class TestResizeWorkflows:
+    """Test end-to-end workflows for resizing images."""
+
+    @pytest.fixture
+    def main_window(self, qtbot):
+        """Create main window for testing."""
+        from ui.main_window import MainWindow
+
+        window = MainWindow()
+        qtbot.addWidget(window)
+        return window
+
+    @pytest.fixture
+    def test_image(self, tmp_path):
+        """Create a test image for resize workflows (400x300)."""
+        img = PILImage.new("RGB", (400, 300), color="blue")
+        img_path = tmp_path / "resize_test.png"
+        img.save(img_path, "PNG")
+        return img_path
+
+    # T083: Integration test for "Resize with proportional width"
+    @pytest.mark.integration
+    def test_resize_proportional_width(self, main_window, test_image, qtbot, monkeypatch):
+        """Test resize workflow: Load image, resize to new width, maintain aspect ratio."""
+        # Load image (400x300)
+        monkeypatch.setattr(
+            "PySide6.QtWidgets.QFileDialog.getOpenFileName",
+            lambda *args, **kwargs: (str(test_image), "PNG Files (*.png)"),
+        )
+        main_window.action_open.trigger()
+
+        editor = main_window._editor
+        assert editor.get_current_image().size == (400, 300)
+
+        # Resize to width=200, height should auto-calculate to 150 (maintains 4:3 ratio)
+        editor.resize(width=200, height=None)
+
+        # Verify image is now 200x150
+        resized_img = editor.get_current_image()
+        assert resized_img.size == (200, 150)
+
+        # Verify unsaved changes flag set
+        assert editor.has_unsaved_changes() is True
+
+    # T084: Integration test for "Resize with percentage"
+    @pytest.mark.integration
+    def test_resize_with_percentage(self, main_window, test_image, qtbot, monkeypatch):
+        """Test resize workflow: Load image, resize to 50% scale."""
+        # Load image (400x300)
+        monkeypatch.setattr(
+            "PySide6.QtWidgets.QFileDialog.getOpenFileName",
+            lambda *args, **kwargs: (str(test_image), "PNG Files (*.png)"),
+        )
+        main_window.action_open.trigger()
+
+        editor = main_window._editor
+        original_img = editor.get_current_image()
+        assert original_img.size == (400, 300)
+
+        # Resize to 50% (200x150)
+        new_width = int(400 * 0.5)
+        new_height = int(300 * 0.5)
+        editor.resize(width=new_width, height=new_height)
+
+        # Verify image is now 200x150
+        resized_img = editor.get_current_image()
+        assert resized_img.size == (200, 150)

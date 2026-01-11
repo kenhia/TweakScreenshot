@@ -245,35 +245,35 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 ### Tests for US3 (MANDATORY per Constitution II: TDD) ✅
 
-- [ ] T081 [P] [US3] Write contract test for ImageEditor.resize() in tests/contract/test_image_editor_contract.py
+- [X] T081 [P] [US3] Write contract test for ImageEditor.resize() in tests/contract/test_image_editor_contract.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T082 [P] [US3] Write unit test for resize input validation in tests/unit/test_validators.py
+- [X] T082 [P] [US3] Write unit test for resize input validation in tests/unit/test_validators.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T083 [P] [US3] Write integration test for "Resize with proportional width" in tests/integration/test_ui_workflows.py
+- [X] T083 [P] [US3] Write integration test for "Resize with proportional width" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T084 [P] [US3] Write integration test for "Resize with percentage" in tests/integration/test_ui_workflows.py
+- [X] T084 [P] [US3] Write integration test for "Resize with percentage" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
 
 **Checkpoint - RED**: All US3 tests written and FAILING.
 
 ### Implementation for US3
 
-- [ ] T085 [US3] Implement ImageEditor.resize() in src/core/image_editor.py (PIL resize with LANCZOS filter, update current_data, add to history)
+- [X] T085 [US3] Implement ImageEditor.resize() in src/core/image_editor.py (PIL resize with LANCZOS filter, update current_data, add to history)
 - [ ] T086 [US3] Create ResizeDialog in src/ui/dialogs/resize_dialog.py (width/height inputs, aspect ratio lock, percentage mode)
-- [ ] T087 [US3] Add resize input validation (positive integers, extreme dimension warnings per edge cases)
-- [ ] T088 [US3] Add Edit > Resize menu action in src/ui/main_window.py (open dialog, call ImageEditor.resize)
-- [ ] T089 [US3] Add warning dialog for extreme dimensions (<50px or >10000px) with override option
-- [ ] T090 [US3] Update status bar with new dimensions after resize
-- [ ] T091 [US3] Add logging for resize operations (Constitution V)
+- [X] T087 [US3] Add resize input validation (positive integers, extreme dimension warnings per edge cases)
+- [X] T088 [US3] Add Edit > Resize menu action in src/ui/main_window.py (open dialog, call ImageEditor.resize)
+- [X] T089 [US3] Add warning dialog for extreme dimensions (<50px or >10000px) with override option
+- [X] T090 [US3] Update status bar with new dimensions after resize
+- [X] T091 [US3] Add logging for resize operations (Constitution V)
 
 **Checkpoint - GREEN**: All US3 tests PASSING. Resize complete.
 
 ### Code Quality & Refactor for US3
 
-- [ ] T092 [US3] Run pre-commit checks: ruff format → ruff check → pytest
-- [ ] T093 [US3] Refactor ResizeDialog if needed (simplify aspect ratio logic)
-- [ ] T094 [US3] Add docstrings and update README with resize examples
-- [ ] T095 [US3] **Stage Commit**: "feat(US3): implement resize with dimensions/percentage and extreme size warnings"
+- [X] T092 [US3] Run pre-commit checks: ruff format → ruff check → pytest
+- [X] T093 [US3] Refactor ResizeDialog if needed (simplify aspect ratio logic)
+- [X] T094 [US3] Add docstrings and update README with resize examples
+- [X] T095 [US3] **Stage Commit**: "feat(US3): implement resize with dimensions/percentage and extreme size warnings"
 
 ---
 

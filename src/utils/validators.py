@@ -74,7 +74,7 @@ def validate_image_format(format_str: str) -> None:
         raise ValueError(f"Unsupported format: {format_str}. Supported: {', '.join(supported)}")
 
 
-def validate_resize_dimensions(
+def validate_resize_parameters(
     width: int | None, height: int | None, percentage: float | None
 ) -> None:
     """Validate resize parameters.
@@ -129,3 +129,30 @@ def check_extreme_dimensions(width: int, height: int) -> str | None:
         )
 
     return None
+
+
+def validate_resize_dimensions(width: int, height: int) -> None:
+    """Validate resize dimensions are positive integers.
+
+    Args:
+        width: Target width in pixels
+        height: Target height in pixels
+
+    Raises:
+        ValueError: If dimensions are not positive
+    """
+    if width <= 0 or height <= 0:
+        raise ValueError(f"Resize dimensions must be positive, got: {width}x{height}")
+
+
+def is_extreme_dimension(width: int, height: int) -> bool:
+    """Check if dimensions are extreme (too small or too large).
+
+    Args:
+        width: Image width in pixels
+        height: Image height in pixels
+
+    Returns:
+        True if dimensions are extreme, False otherwise
+    """
+    return width < 50 or height < 50 or width > 10000 or height > 10000

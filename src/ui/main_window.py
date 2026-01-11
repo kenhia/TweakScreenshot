@@ -111,6 +111,7 @@ class MainWindow(QMainWindow):
         self.action_open.triggered.connect(self._handle_open_file)
         self.action_save_as.triggered.connect(self._handle_save_as)
         self.action_revert.triggered.connect(self._handle_revert)
+        self.action_resize.triggered.connect(self._handle_resize)
         self.action_revert.triggered.connect(self._handle_revert)
 
     def update_status(self, message: str) -> None:
@@ -371,3 +372,70 @@ class MainWindow(QMainWindow):
             show_error_dialog(
                 self, "Cannot Revert Image", "Failed to revert to original image.", f"Error: {e}"
             )
+
+    def _handle_resize(self) -> None:
+        """Handle Edit > Resize action to resize image."""
+        if not self._editor.has_image():
+            return
+
+        from PySide6.QtWidgets import QInputDialog, QMessageBox
+
+        from utils.validators import is_extreme_dimension
+
+        current_img = self._editor.get_current_image()
+        current_width = current_img.width
+        current_height = current_img.height
+
+        # Prompt for new width
+        new_width, ok = QInputDialog.getInt(
+            self,
+            "Resize Image",
+            f"Enter new width (current: {current_width}px):",
+            current_width,
+            1,
+            20000,
+            1,
+        )
+
+        if not ok:
+            return  # User cancelled
+
+        # Calculate proportional height
+        aspect_ratio = current_height / current_width
+        new_height = int(new_width * aspect_ratio)
+
+        # T089: Check for extreme dimensions
+        if is_extreme_dimension(new_width, new_height):
+            warning_msg = (
+                f"The new dimensions ({new_width}x{new_height}px) are extreme.\n\n"
+                f"Small images (<50px) may appear pixelated.\n"
+                f"Large images (>10000px) may use significant memory.\n\n"
+                f"Do you want to proceed anyway?"
+            )
+            reply = QMessageBox.warning(
+                self,
+                "Extreme Dimensions Warning",
+                warning_msg,
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+
+            if reply != QMessageBox.StandardButton.Yes:
+                return  # User cancelled
+
+        # Perform resize
+        try:
+            start_time = time.time()
+            self._editor.resize(width=new_width, height=None)  # Height auto-calculated
+            duration_ms = (time.time() - start_time) * 1000
+
+            self._logger.info(f"Resized image to {new_width}x{new_height}px")
+            log_operation(self._logger, "resize", duration_ms)
+
+            self._display_current_image()
+            self._update_ui_state()
+            self.update_status(f"Image resized to {new_width}x{new_height}px")
+
+        except Exception as e:
+            self._logger.error(f"Failed to resize image: {e}")
+            show_error_dialog(self, "Cannot Resize Image", "Failed to resize image.", f"Error: {e}")
