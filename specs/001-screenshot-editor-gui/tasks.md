@@ -229,9 +229,9 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 ### Code Quality & Refactor for US4
 
-- [ ] T078 [US4] Run pre-commit checks: ruff format → ruff check → pytest
-- [ ] T079 [US4] Add docstrings and update README
-- [ ] T080 [US4] **Stage Commit**: "feat(US4): implement revert to original image"
+- [X] T078 [US4] Run pre-commit checks: ruff format → ruff check → pytest
+- [X] T079 [US4] Add docstrings and update README
+- [X] T080 [US4] **Stage Commit**: "feat(US4): implement revert to original image"
 
 ---
 
