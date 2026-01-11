@@ -69,39 +69,39 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 > **TDD Workflow**: Write test → Verify test FAILS (RED) → Implement → Test PASSES (GREEN) → Refactor
 
-- [ ] T017 [P] [US1] Write contract test for ImageEditor.load_from_file() in tests/contract/test_image_editor_contract.py
+- [X] T017 [P] [US1] Write contract test for ImageEditor.load_from_file() in tests/contract/test_image_editor_contract.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T018 [P] [US1] Write contract test for ImageEditor.load_from_clipboard() in tests/contract/test_image_editor_contract.py
+- [X] T018 [P] [US1] Write contract test for ImageEditor.load_from_clipboard() in tests/contract/test_image_editor_contract.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T019 [P] [US1] Write unit test for file_ops.load_image_from_file() in tests/unit/test_file_ops.py
+- [X] T019 [P] [US1] Write unit test for file_ops.load_image_from_file() in tests/unit/test_file_ops.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T020 [P] [US1] Write unit test for clipboard.load_image_from_clipboard() in tests/unit/test_clipboard.py
+- [X] T020 [P] [US1] Write unit test for clipboard.load_image_from_clipboard() in tests/unit/test_clipboard.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T021 [P] [US1] Write integration test for "Load from file workflow" in tests/integration/test_ui_workflows.py
+- [X] T021 [P] [US1] Write integration test for "Load from file workflow" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T022 [P] [US1] Write integration test for "Paste from clipboard workflow" in tests/integration/test_ui_workflows.py
+- [X] T022 [P] [US1] Write integration test for "Paste from clipboard workflow" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
 
 **Checkpoint - RED**: All US1 tests written and FAILING. Ready for implementation.
 
 ### Implementation for US1
 
-- [ ] T023 [P] [US1] Implement load_image_from_file() in src/core/file_ops.py (uses Pillow, validates format, handles errors)
-- [ ] T024 [P] [US1] Implement load_image_from_clipboard() in src/core/clipboard.py (QClipboard to PIL, format conversion)
-- [ ] T025 [US1] Implement ImageEditor.load_from_file() in src/core/image_editor.py (calls file_ops, updates Image model)
-- [ ] T026 [US1] Implement ImageEditor.load_from_clipboard() in src/core/image_editor.py (calls clipboard, updates Image model)
-- [ ] T027 [P] [US1] Create ImageViewer widget in src/ui/widgets/image_viewer.py (QLabel with QScrollArea, DPI-aware display)
-- [ ] T028 [US1] Integrate File > Open menu action in src/ui/main_window.py (QFileDialog, call ImageEditor.load_from_file)
-- [ ] T029 [US1] Integrate Ctrl-V paste action in src/ui/main_window.py (keyPressEvent, call ImageEditor.load_from_clipboard)
-- [ ] T030 [US1] Add error dialogs for invalid files and empty clipboard (Constitution IV: clear error messages)
-- [ ] T031 [US1] Add status bar updates showing image dimensions (Constitution IV: help mechanisms)
-- [ ] T032 [US1] Add logging for load operations >500ms (Constitution V: performance monitoring)
+- [X] T023 [P] [US1] Implement load_image_from_file() in src/core/file_ops.py (uses Pillow, validates format, handles errors)
+- [X] T024 [P] [US1] Implement load_image_from_clipboard() in src/core/clipboard.py (QClipboard to PIL, format conversion)
+- [X] T025 [US1] Implement ImageEditor.load_from_file() in src/core/image_editor.py (calls file_ops, updates Image model)
+- [X] T026 [US1] Implement ImageEditor.load_from_clipboard() in src/core/image_editor.py (calls clipboard, updates Image model)
+- [X] T027 [P] [US1] Create ImageViewer widget in src/ui/widgets/image_viewer.py (QLabel with QScrollArea, DPI-aware display)
+- [X] T028 [US1] Integrate File > Open menu action in src/ui/main_window.py (QFileDialog, call ImageEditor.load_from_file)
+- [X] T029 [US1] Integrate Ctrl-V paste action in src/ui/main_window.py (keyPressEvent, call ImageEditor.load_from_clipboard)
+- [X] T030 [US1] Add error dialogs for invalid files and empty clipboard (Constitution IV: clear error messages)
+- [X] T031 [US1] Add status bar updates showing image dimensions (Constitution IV: help mechanisms)
+- [X] T032 [US1] Add logging for load operations >500ms (Constitution V: performance monitoring)
 
 **Checkpoint - GREEN**: All US1 tests now PASSING. Implementation complete.
 
 ### Code Quality & Refactor for US1
 
-- [ ] T033 [US1] Run pre-commit checks: ruff format → ruff check → pytest (Constitution III)
+- [X] T033 [US1] Run pre-commit checks: ruff format → ruff check → pytest (Constitution III)
 - [ ] T034 [US1] Refactor for clarity if needed (DRY principle, extract common patterns)
 - [ ] T035 [US1] Add docstrings to all public methods (Constitution IV: documentation)
 - [ ] T036 [US1] **Stage Commit**: "feat(US1): implement load and display screenshot from file/clipboard"

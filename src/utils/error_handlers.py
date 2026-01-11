@@ -1,6 +1,5 @@
 """Error handling utilities for user-friendly dialogs."""
 
-
 from PySide6.QtWidgets import QMessageBox, QWidget
 
 
