@@ -168,19 +168,19 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 ### Tests for US2 (MANDATORY per Constitution II: TDD) ✅
 
-- [ ] T055 [P] [US2] Write contract test for ImageEditor.crop() in tests/contract/test_image_editor_contract.py
+- [X] T055 [P] [US2] Write contract test for ImageEditor.crop() in tests/contract/test_image_editor_contract.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T056 [P] [US2] Write unit test for Selection model validation in tests/unit/test_selection.py
+- [X] T056 [P] [US2] Write unit test for Selection model validation in tests/unit/test_selection.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T057 [P] [US2] Write integration test for "Crop workflow" in tests/integration/test_ui_workflows.py
+- [X] T057 [P] [US2] Write integration test for "Crop workflow" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
 
 **Checkpoint - RED**: All US2 tests written and FAILING.
 
 ### Implementation for US2
 
-- [ ] T058 [US2] Create Selection model in src/models/selection.py (x, y, width, height, validation, bounds checking)
-- [ ] T059 [US2] Implement ImageEditor.crop() in src/core/image_editor.py (PIL crop, update current_data, add to history)
+- [X] T058 [US2] Create Selection model in src/models/selection.py (x, y, width, height, validation, bounds checking)
+- [X] T059 [US2] Implement ImageEditor.crop() in src/core/image_editor.py (PIL crop, update current_data, add to history)
 - [ ] T060 [US2] Create CropSelector widget in src/ui/widgets/crop_selector.py (mouse drag selection overlay)
 - [ ] T061 [US2] Integrate CropSelector into ImageViewer in src/ui/widgets/image_viewer.py
 - [ ] T062 [US2] Add Edit > Crop menu action and toolbar button in src/ui/main_window.py

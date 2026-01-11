@@ -1,13 +1,15 @@
 """Core image editor with load, edit, and save operations."""
 
+from datetime import UTC, datetime
 from pathlib import Path
 
 from PIL import Image as PILImage
 
 from core.clipboard import load_image_from_clipboard
 from core.file_ops import load_image_from_file, save_image_to_file
-from models.edit_history import EditHistory
+from models.edit_history import EditHistory, EditOperation
 from models.image_model import Image
+from models.selection import Selection
 
 
 class ImageEditor:
@@ -162,3 +164,54 @@ class ImageEditor:
         if self._edit_history is None:
             return []
         return self._edit_history.operations.copy()
+
+    def crop(self, x: int, y: int, width: int, height: int) -> None:
+        """Crop image to specified rectangular region.
+
+        Args:
+            x: Left coordinate (pixels from left edge)
+            y: Top coordinate (pixels from top edge)
+            width: Width of crop region in pixels
+            height: Height of crop region in pixels
+
+        Raises:
+            ValueError: If no image loaded, invalid dimensions, or region outside bounds
+
+        Postconditions:
+            - get_current_image() returns cropped image
+            - has_unsaved_changes() returns True
+            - get_edit_history() includes crop operation
+        """
+        if self._image is None:
+            raise ValueError("No image loaded. Load an image before cropping.")
+
+        # Validate dimensions
+        if width <= 0 or height <= 0:
+            raise ValueError("Crop dimensions must be positive")
+
+        # Create selection and validate bounds
+        selection = Selection(x=x, y=y, width=width, height=height)
+        current_img = self._image.current_data
+
+        if not selection.is_within_bounds(current_img.width, current_img.height):
+            raise ValueError(
+                f"Crop region ({x}, {y}, {width}, {height}) "
+                f"outside image bounds ({current_img.width}, {current_img.height})"
+            )
+
+        # Perform crop
+        crop_box = selection.to_tuple()
+        cropped_img = current_img.crop(crop_box)
+
+        # Update image model
+        self._image.current_data = cropped_img
+        self._image.has_unsaved_changes = True
+
+        # Record operation in history
+        if self._edit_history:
+            operation = EditOperation(
+                type="crop",
+                timestamp=datetime.now(UTC),
+                parameters={"x": x, "y": y, "width": width, "height": height},
+            )
+            self._edit_history.add_operation(operation)

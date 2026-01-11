@@ -167,3 +167,51 @@ class TestImageEditorContract:
 
         with pytest.raises(ValueError, match="No image loaded"):
             image_editor.save_to_file(output_path, format_str="PNG")
+
+    # T055: Contract test for crop()
+    @pytest.mark.contract
+    def test_crop_valid_region(self, image_editor, sample_png_path):
+        """Contract: Cropping with valid region reduces image dimensions."""
+        image_editor.load_from_file(sample_png_path)
+
+        # Original is 100x100
+        original_img = image_editor.get_current_image()
+        assert original_img.size == (100, 100)
+
+        # Crop to 50x50 region starting at (10, 10)
+        image_editor.crop(x=10, y=10, width=50, height=50)
+
+        # Current image should now be 50x50
+        cropped_img = image_editor.get_current_image()
+        assert cropped_img.size == (50, 50)
+
+        # Should mark as unsaved
+        assert image_editor.has_unsaved_changes() is True
+
+        # Edit history should record the crop
+        history = image_editor.get_edit_history()
+        assert len(history) == 1
+        assert history[0].type == "crop"
+
+    @pytest.mark.contract
+    def test_crop_invalid_region_raises_error(self, image_editor, sample_png_path):
+        """Contract: Cropping with invalid region raises ValueError."""
+        image_editor.load_from_file(sample_png_path)
+
+        # Crop region outside image bounds (image is 100x100)
+        with pytest.raises(ValueError, match="region"):
+            image_editor.crop(x=150, y=150, width=50, height=50)
+
+    @pytest.mark.contract
+    def test_crop_zero_dimensions_raises_error(self, image_editor, sample_png_path):
+        """Contract: Cropping with zero width/height raises ValueError."""
+        image_editor.load_from_file(sample_png_path)
+
+        with pytest.raises(ValueError, match="dimensions"):
+            image_editor.crop(x=10, y=10, width=0, height=50)
+
+    @pytest.mark.contract
+    def test_crop_without_image_raises_error(self, image_editor):
+        """Contract: Attempting to crop without loaded image raises ValueError."""
+        with pytest.raises(ValueError, match="No image loaded"):
+            image_editor.crop(x=0, y=0, width=50, height=50)
