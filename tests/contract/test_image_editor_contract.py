@@ -215,3 +215,62 @@ class TestImageEditorContract:
         """Contract: Attempting to crop without loaded image raises ValueError."""
         with pytest.raises(ValueError, match="No image loaded"):
             image_editor.crop(x=0, y=0, width=50, height=50)
+
+    # T071: Contract test for revert()
+    @pytest.mark.contract
+    def test_revert_after_crop(self, image_editor, sample_png_path):
+        """Contract: Reverting after crop restores original image."""
+        image_editor.load_from_file(sample_png_path)
+
+        # Original is 100x100
+        original_size = image_editor.get_current_image().size
+        assert original_size == (100, 100)
+
+        # Crop to 50x50
+        image_editor.crop(x=25, y=25, width=50, height=50)
+        assert image_editor.get_current_image().size == (50, 50)
+        assert image_editor.has_unsaved_changes() is True
+
+        # Revert should restore original
+        image_editor.revert()
+
+        # Back to original size
+        assert image_editor.get_current_image().size == (100, 100)
+        assert image_editor.has_unsaved_changes() is False
+        assert len(image_editor.get_edit_history()) == 0
+
+    @pytest.mark.contract
+    def test_revert_clears_edit_history(self, image_editor, sample_png_path):
+        """Contract: Reverting clears all edit history."""
+        image_editor.load_from_file(sample_png_path)
+
+        # Perform multiple crops
+        image_editor.crop(x=10, y=10, width=80, height=80)
+        image_editor.crop(x=5, y=5, width=60, height=60)
+
+        # Should have 2 operations
+        assert len(image_editor.get_edit_history()) == 2
+
+        # Revert clears all
+        image_editor.revert()
+        assert len(image_editor.get_edit_history()) == 0
+
+    @pytest.mark.contract
+    def test_revert_without_changes_is_safe(self, image_editor, sample_png_path):
+        """Contract: Reverting without changes is safe (no-op)."""
+        image_editor.load_from_file(sample_png_path)
+
+        original_size = image_editor.get_current_image().size
+
+        # Revert without any edits should be safe
+        image_editor.revert()
+
+        # Image unchanged
+        assert image_editor.get_current_image().size == original_size
+        assert image_editor.has_unsaved_changes() is False
+
+    @pytest.mark.contract
+    def test_revert_without_image_raises_error(self, image_editor):
+        """Contract: Attempting to revert without loaded image raises ValueError."""
+        with pytest.raises(ValueError, match="No image loaded"):
+            image_editor.revert()

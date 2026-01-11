@@ -110,6 +110,8 @@ class MainWindow(QMainWindow):
         """Connect menu actions to handlers."""
         self.action_open.triggered.connect(self._handle_open_file)
         self.action_save_as.triggered.connect(self._handle_save_as)
+        self.action_revert.triggered.connect(self._handle_revert)
+        self.action_revert.triggered.connect(self._handle_revert)
 
     def update_status(self, message: str) -> None:
         """Update status bar message.
@@ -218,10 +220,14 @@ class MainWindow(QMainWindow):
     def _update_ui_state(self) -> None:
         """Update menu item enabled states based on current state."""
         has_image = self._editor.has_image()
+        has_unsaved = self._editor.has_unsaved_changes()
 
         # Enable actions when image is loaded
         self.action_save_as.setEnabled(has_image)
         self.action_resize.setEnabled(has_image)
+
+        # Enable revert only when there are unsaved changes
+        self.action_revert.setEnabled(has_image and has_unsaved)
 
     def _handle_save_as(self) -> None:
         """Handle File > Save As action."""
@@ -342,3 +348,26 @@ class MainWindow(QMainWindow):
         else:
             # Default to PNG
             return "PNG"
+
+    def _handle_revert(self) -> None:
+        """Handle Edit > Revert action to restore original image."""
+        if not self._editor.has_image():
+            return
+
+        try:
+            start_time = time.time()
+            self._editor.revert()
+            duration_ms = (time.time() - start_time) * 1000
+
+            self._logger.info("Reverted to original image")
+            log_operation(self._logger, "revert", duration_ms)
+
+            self._display_current_image()
+            self._update_ui_state()
+            self.update_status("Image reverted to original")
+
+        except Exception as e:
+            self._logger.error(f"Failed to revert image: {e}")
+            show_error_dialog(
+                self, "Cannot Revert Image", "Failed to revert to original image.", f"Error: {e}"
+            )

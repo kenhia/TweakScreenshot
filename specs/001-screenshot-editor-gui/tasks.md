@@ -210,20 +210,20 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 ### Tests for US4 (MANDATORY per Constitution II: TDD) ✅
 
-- [ ] T071 [P] [US4] Write contract test for ImageEditor.revert() in tests/contract/test_image_editor_contract.py
+- [X] T071 [P] [US4] Write contract test for ImageEditor.revert() in tests/contract/test_image_editor_contract.py
   - **TDD Gate**: Test MUST fail before implementation
-- [ ] T072 [P] [US4] Write integration test for "Revert after crop" in tests/integration/test_ui_workflows.py
+- [X] T072 [P] [US4] Write integration test for "Revert after crop" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
 
 **Checkpoint - RED**: All US4 tests written and FAILING.
 
 ### Implementation for US4
 
-- [ ] T073 [US4] Implement ImageEditor.revert() in src/core/image_editor.py (copy original_data to current_data, clear history)
-- [ ] T074 [US4] Add Edit > Revert menu action in src/ui/main_window.py (enable only when has_unsaved_changes)
-- [ ] T075 [US4] Add Ctrl-R keyboard shortcut for revert
-- [ ] T076 [US4] Update status bar after revert
-- [ ] T077 [US4] Add logging for revert operations
+- [X] T073 [US4] Implement ImageEditor.revert() in src/core/image_editor.py (copy original_data to current_data, clear history)
+- [X] T074 [US4] Add Edit > Revert menu action in src/ui/main_window.py (enable only when has_unsaved_changes)
+- [X] T075 [US4] Add Ctrl-R keyboard shortcut for revert
+- [X] T076 [US4] Update status bar after revert
+- [X] T077 [US4] Add logging for revert operations
 
 **Checkpoint - GREEN**: All US4 tests PASSING. Revert complete.
 

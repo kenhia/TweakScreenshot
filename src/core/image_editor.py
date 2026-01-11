@@ -215,3 +215,25 @@ class ImageEditor:
                 parameters={"x": x, "y": y, "width": width, "height": height},
             )
             self._edit_history.add_operation(operation)
+
+    def revert(self) -> None:
+        """Revert image to original unedited state.
+
+        Raises:
+            ValueError: If no image loaded
+
+        Postconditions:
+            - get_current_image() returns copy of original image
+            - has_unsaved_changes() returns False
+            - get_edit_history() returns empty list
+        """
+        if self._image is None:
+            raise ValueError("No image loaded. Load an image before reverting.")
+
+        # Restore original image data
+        self._image.current_data = self._image.original_data.copy()
+        self._image.has_unsaved_changes = False
+
+        # Clear edit history
+        if self._edit_history:
+            self._edit_history.clear()

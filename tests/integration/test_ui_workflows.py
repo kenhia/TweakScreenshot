@@ -312,3 +312,71 @@ class TestCropWorkflows:
         # After crop, revert should be enabled (when UI updates)
         # (In full implementation, MainWindow would enable this in _update_ui_state)
         assert editor.has_unsaved_changes() is True
+
+
+class TestRevertWorkflows:
+    """Test end-to-end workflows for reverting edits."""
+
+    @pytest.fixture
+    def main_window(self, qtbot):
+        """Create main window for testing."""
+        from ui.main_window import MainWindow
+
+        window = MainWindow()
+        qtbot.addWidget(window)
+        return window
+
+    @pytest.fixture
+    def test_image(self, tmp_path):
+        """Create test image file."""
+        img_path = tmp_path / "revert_test.png"
+        img = PILImage.new("RGB", (300, 300), color="blue")
+        img.save(img_path, "PNG")
+        return img_path
+
+    # T072: Integration test for "Revert after crop"
+    @pytest.mark.integration
+    def test_revert_after_crop_workflow(self, main_window, test_image, qtbot, monkeypatch):
+        """Test complete workflow: Load image, crop, revert to original."""
+        # Load image first
+        monkeypatch.setattr(
+            "PySide6.QtWidgets.QFileDialog.getOpenFileName",
+            lambda *args, **kwargs: (str(test_image), "PNG Files (*.png)"),
+        )
+        main_window.action_open.trigger()
+
+        # Verify original dimensions (300x300)
+        editor = main_window._editor
+        assert editor.get_current_image().size == (300, 300)
+
+        # Crop to 100x100
+        editor.crop(x=50, y=50, width=100, height=100)
+        assert editor.get_current_image().size == (100, 100)
+        assert editor.has_unsaved_changes() is True
+
+        # Revert
+        editor.revert()
+
+        # Should be back to 300x300
+        assert editor.get_current_image().size == (300, 300)
+        assert editor.has_unsaved_changes() is False
+
+    @pytest.mark.integration
+    def test_revert_disables_after_use(self, main_window, test_image, qtbot, monkeypatch):
+        """Revert action disables after reverting (no unsaved changes)."""
+        # Load and crop
+        monkeypatch.setattr(
+            "PySide6.QtWidgets.QFileDialog.getOpenFileName",
+            lambda *args, **kwargs: (str(test_image), "PNG Files (*.png)"),
+        )
+        main_window.action_open.trigger()
+
+        editor = main_window._editor
+        editor.crop(x=50, y=50, width=150, height=150)
+
+        # Revert should be enabled (when UI updated)
+        assert editor.has_unsaved_changes() is True
+
+        # After revert, should disable
+        editor.revert()
+        assert editor.has_unsaved_changes() is False
