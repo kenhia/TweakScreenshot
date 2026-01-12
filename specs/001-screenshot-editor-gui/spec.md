@@ -48,6 +48,10 @@ A user needs to remove unwanted portions of their screenshot to focus on the rel
 9. **Given** crop markers are visible, **When** user presses Enter, **Then** the image is cropped to the marked region
 10. **Given** crop markers are visible, **When** user presses Escape, **Then** the crop markers are cancelled and removed
 
+**Visual Feedback:**
+11. **Given** crop selection is active, **When** user moves or resizes the selection, **Then** the status bar displays both current image dimensions and the crop target dimensions
+12. **Given** crop selection is active, **When** user views the selection area, **Then** the image inside the selection is clearly visible (not obscured), with a semi-transparent overlay outside the selection
+
 ---
 
 ### User Story 3 - Resize Screenshot (Priority: P3)

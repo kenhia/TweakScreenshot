@@ -17,6 +17,7 @@ class CropSelector(QWidget):
     # Signals
     crop_applied = Signal(int, int, int, int)  # x, y, width, height
     crop_cancelled = Signal()
+    selection_changed = Signal(int, int)  # width, height
 
     # Movement step size in pixels
     MOVE_STEP = 5
@@ -57,6 +58,7 @@ class CropSelector(QWidget):
         self._selection = image_rect.adjusted(margin, margin, -margin, -margin)
         self._is_active = True
         self.setFocus()
+        self.selection_changed.emit(self._selection.width(), self._selection.height())
         self.update()
 
     def deactivate_selection(self) -> None:
@@ -128,6 +130,7 @@ class CropSelector(QWidget):
 
             # Constrain to widget bounds
             self._constrain_to_bounds()
+            self.selection_changed.emit(self._selection.width(), self._selection.height())
             self.update()
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
@@ -202,6 +205,7 @@ class CropSelector(QWidget):
 
         self._selection.translate(dx, dy)
         self._constrain_to_bounds()
+        self.selection_changed.emit(self._selection.width(), self._selection.height())
         self.update()
 
     def _resize_selection(self, key: Qt.Key) -> None:
@@ -229,6 +233,7 @@ class CropSelector(QWidget):
             self._selection.setHeight(self._selection.height() + self.RESIZE_STEP)
 
         self._constrain_to_bounds()
+        self.selection_changed.emit(self._selection.width(), self._selection.height())
         self.update()
 
     def _constrain_to_bounds(self) -> None:
@@ -272,16 +277,38 @@ class CropSelector(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # Draw semi-transparent overlay outside selection
+        # Draw semi-transparent overlay as 4 rectangles around selection
         overlay_color = QColor(0, 0, 0, 100)  # Semi-transparent black
-        painter.fillRect(self.rect(), overlay_color)
+        widget_rect = self.rect()
 
-        # Clear selection area (show image underneath)
-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
-        painter.fillRect(self._selection, Qt.GlobalColor.transparent)
+        # Top rectangle
+        painter.fillRect(0, 0, widget_rect.width(), self._selection.top(), overlay_color)
+        # Bottom rectangle
+        painter.fillRect(
+            0,
+            self._selection.bottom(),
+            widget_rect.width(),
+            widget_rect.height() - self._selection.bottom(),
+            overlay_color,
+        )
+        # Left rectangle
+        painter.fillRect(
+            0,
+            self._selection.top(),
+            self._selection.left(),
+            self._selection.height(),
+            overlay_color,
+        )
+        # Right rectangle
+        painter.fillRect(
+            self._selection.right(),
+            self._selection.top(),
+            widget_rect.width() - self._selection.right(),
+            self._selection.height(),
+            overlay_color,
+        )
 
         # Draw selection border
-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
         pen = QPen(self._selection_color, self._selection_border_width)
         pen.setStyle(Qt.PenStyle.SolidLine)
         painter.setPen(pen)

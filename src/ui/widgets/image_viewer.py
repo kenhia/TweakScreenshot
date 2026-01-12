@@ -13,6 +13,7 @@ class ImageViewer(QScrollArea):
     # Signals
     crop_requested = Signal(int, int, int, int)  # x, y, width, height
     crop_cancelled = Signal()
+    crop_selection_changed = Signal(int, int)  # width, height
 
     def __init__(self, parent: QWidget | None = None) -> None:
         """Initialize image viewer.
@@ -38,6 +39,7 @@ class ImageViewer(QScrollArea):
         self._crop_selector = CropSelector(self._image_label)
         self._crop_selector.crop_applied.connect(self._on_crop_applied)
         self._crop_selector.crop_cancelled.connect(self._on_crop_cancelled)
+        self._crop_selector.selection_changed.connect(self.crop_selection_changed.emit)
         self._crop_selector.hide()
 
         # Configure scroll area

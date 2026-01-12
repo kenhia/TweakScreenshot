@@ -109,6 +109,7 @@ class MainWindow(QMainWindow):
         # Connect crop signals from image viewer
         self._image_viewer.crop_requested.connect(self._handle_crop_requested)
         self._image_viewer.crop_cancelled.connect(self._handle_crop_cancelled)
+        self._image_viewer.crop_selection_changed.connect(self._handle_crop_selection_changed)
 
     def _connect_signals(self) -> None:
         """Connect menu actions to handlers."""
@@ -424,7 +425,25 @@ class MainWindow(QMainWindow):
 
     def _handle_crop_cancelled(self) -> None:
         """Handle crop cancellation from image viewer."""
-        self.update_status("Crop cancelled")
+        # Restore normal status showing current image dimensions
+        current_img = self._editor.get_current_image()
+        if current_img:
+            self.update_dimensions_status(current_img.width, current_img.height)
+        else:
+            self.update_status("Crop cancelled")
+
+    def _handle_crop_selection_changed(self, width: int, height: int) -> None:
+        """Handle crop selection size change.
+
+        Args:
+            width: Width of crop selection
+            height: Height of crop selection
+        """
+        current_img = self._editor.get_current_image()
+        if current_img:
+            self.update_status(
+                f"Current: {current_img.width}x{current_img.height}px → Crop to: {width}x{height}px"
+            )
 
     def _handle_resize(self) -> None:
         """Handle Edit > Resize action to resize image."""
