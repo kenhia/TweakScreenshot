@@ -58,6 +58,9 @@ class ImageViewer(QScrollArea):
         self._image_label.resize(pixmap.size())
         self._has_image = True
 
+        # Resize container to fit image
+        self._container.resize(pixmap.size())
+
         # Update crop selector size to match image
         self._crop_selector.setGeometry(0, 0, pixmap.width(), pixmap.height())
 
