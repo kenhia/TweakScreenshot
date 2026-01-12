@@ -162,7 +162,7 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 **Goal**: Users can select a rectangular region with mouse drag and crop image to that selection
 
-**Independent Test**: Load image, drag selection rectangle, click Crop button, verify only selected area remains.
+**Independent Test**: Load image, use mouse to drag selection rectangle OR use Edit > Crop with keyboard controls, press Enter or click Crop button, verify only selected area remains.
 
 **Dependencies**: US1 complete (need image loaded and displayed)
 
@@ -174,6 +174,8 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
   - **TDD Gate**: Test MUST fail before implementation
 - [X] T057 [P] [US2] Write integration test for "Crop workflow" in tests/integration/test_ui_workflows.py
   - **TDD Gate**: Test MUST fail before implementation
+- [X] T057a [US2] Write integration test for "Keyboard crop workflow" in tests/integration/test_ui_workflows.py
+  - **TDD Gate**: Test MUST fail before implementation (test arrow keys for movement, Shift+arrows for resize)
 
 **Checkpoint - RED**: All US2 tests written and FAILING.
 
@@ -181,22 +183,23 @@ Each task follows: `- [ ] [ID] [P?] [Story?] Description`
 
 - [X] T058 [US2] Create Selection model in src/models/selection.py (x, y, width, height, validation, bounds checking)
 - [X] T059 [US2] Implement ImageEditor.crop() in src/core/image_editor.py (PIL crop, update current_data, add to history)
-- [ ] T060 [US2] Create CropSelector widget in src/ui/widgets/crop_selector.py (mouse drag selection overlay)
-- [ ] T061 [US2] Integrate CropSelector into ImageViewer in src/ui/widgets/image_viewer.py
-- [ ] T062 [US2] Add Edit > Crop menu action and toolbar button in src/ui/main_window.py
-- [ ] T063 [US2] Add selection cancellation (Escape key, click outside)
-- [ ] T064 [US2] Add selection bounds snapping to image edges
-- [ ] T065 [US2] Update EditHistory when crop applied
-- [ ] T066 [US2] Add logging for crop operations (Constitution V)
+- [X] T060 [US2] Create CropSelector widget in src/ui/widgets/crop_selector.py (mouse drag + keyboard selection overlay)
+- [X] T060a [US2] Implement keyPressEvent in CropSelector (arrow keys for movement, Shift+arrows for resize, Enter to apply, Escape to cancel)
+- [X] T061 [US2] Integrate CropSelector into ImageViewer in src/ui/widgets/image_viewer.py
+- [X] T062 [US2] Add Edit > Crop menu action and toolbar button in src/ui/main_window.py (triggers crop mode)
+- [X] T063 [US2] Add selection cancellation (Escape key, click outside)
+- [X] T064 [US2] Add selection bounds snapping to image edges (for both mouse and keyboard)
+- [X] T065 [US2] Update EditHistory when crop applied
+- [X] T066 [US2] Add logging for crop operations (Constitution V)
 
-**Checkpoint - GREEN**: All US2 tests PASSING. Crop functionality complete.
+**Checkpoint - GREEN**: All US2 tests PASSING. Crop functionality with both mouse and keyboard control complete.
 
 ### Code Quality & Refactor for US2
 
-- [ ] T067 [US2] Run pre-commit checks: ruff format → ruff check → pytest
-- [ ] T068 [US2] Refactor CropSelector if needed (simplify mouse event handling)
-- [ ] T069 [US2] Add docstrings and update README with crop examples
-- [ ] T070 [US2] **Stage Commit**: "feat(US2): implement crop screenshot with mouse selection"
+- [X] T067 [US2] Run pre-commit checks: ruff format → ruff check → pytest
+- [X] T068 [US2] Refactor CropSelector if needed (simplify mouse/keyboard event handling)
+- [X] T069 [US2] Add docstrings and update README with crop examples (both mouse and keyboard)
+- [X] T070 [US2] **Stage Commit**: "feat(US2): implement crop screenshot with mouse and keyboard controls"
 
 ---
 

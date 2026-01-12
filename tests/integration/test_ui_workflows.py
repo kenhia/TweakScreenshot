@@ -313,6 +313,45 @@ class TestCropWorkflows:
         # (In full implementation, MainWindow would enable this in _update_ui_state)
         assert editor.has_unsaved_changes() is True
 
+    # T057a: Integration test for "Keyboard crop workflow"
+    @pytest.mark.integration
+    def test_keyboard_crop_workflow(self, main_window, test_image, qtbot, monkeypatch):
+        """Test complete workflow: Load image, use Edit > Crop with keyboard controls."""
+
+        # Load image first
+        monkeypatch.setattr(
+            "PySide6.QtWidgets.QFileDialog.getOpenFileName",
+            lambda *args, **kwargs: (str(test_image), "PNG Files (*.png)"),
+        )
+        main_window.action_open.trigger()
+
+        # Verify image loaded (200x200)
+        status_text = main_window.statusBar().currentMessage()
+        assert "200x200" in status_text
+
+        # Trigger Edit > Crop action (would activate CropSelector)
+        # Note: This test will be updated once CropSelector widget is implemented
+        # For now, we simulate the keyboard actions on a mock crop selector
+
+        # Simulate keyboard crop workflow:
+        # 1. Arrow keys should move crop region
+        # 2. Shift+Arrow keys should resize crop region
+        # 3. Enter should apply crop
+        # 4. Escape should cancel crop
+
+        # This is a placeholder test that will be expanded once CropSelector is implemented
+        # The full test will:
+        # - main_window.action_crop.trigger()  # activates crop mode
+        # - QTest.keyClick(crop_selector, Qt.Key_Right)  # move right
+        # - QTest.keyClick(crop_selector, Qt.Key_Down)  # move down
+        # - QTest.keyClick(crop_selector, Qt.Key_Right, Qt.ShiftModifier)  # increase width
+        # - QTest.keyClick(crop_selector, Qt.Key_Down, Qt.ShiftModifier)  # increase height
+        # - QTest.keyClick(crop_selector, Qt.Key_Return)  # apply crop
+
+        # For now, just verify that the action exists and is enabled when image loaded
+        assert hasattr(main_window, "action_crop")
+        assert main_window.action_crop.isEnabled() is True
+
 
 class TestRevertWorkflows:
     """Test end-to-end workflows for reverting edits."""

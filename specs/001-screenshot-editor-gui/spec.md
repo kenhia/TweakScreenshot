@@ -26,18 +26,27 @@ A user has a screenshot they need to edit for their markdown documentation. They
 
 ### User Story 2 - Crop Screenshot (Priority: P2)
 
-A user needs to remove unwanted portions of their screenshot to focus on the relevant area. They can select a rectangular region and crop the image to that selection.
+A user needs to remove unwanted portions of their screenshot to focus on the relevant area. They can select a rectangular region using either mouse or keyboard controls and crop the image to that selection.
 
 **Why this priority**: Cropping is one of the most common screenshot editing tasks - removing taskbars, excess whitespace, or unrelated content to create focused documentation images.
 
-**Independent Test**: Load an image, use mouse to drag a selection rectangle, click Crop button, verify only selected area remains.
+**Independent Test**: Load an image, use mouse to drag a selection rectangle OR use Edit > Crop menu with keyboard controls, click Crop button or press Enter, verify only selected area remains.
 
 **Acceptance Scenarios**:
 
+**Mouse-based Selection:**
 1. **Given** an image is displayed, **When** user clicks and drags to create a selection rectangle, **Then** the selection is visually highlighted with a border or overlay
-2. **Given** a selection rectangle is active, **When** user clicks the Crop button, **Then** the image is cropped to the selected area
+2. **Given** a selection rectangle is active, **When** user clicks the Crop button or presses Enter, **Then** the image is cropped to the selected area
 3. **Given** user is creating a selection, **When** user drags outside the image bounds, **Then** the selection snaps to image edges
 4. **Given** a selection is active, **When** user clicks outside the selection or presses Escape, **Then** the selection is cancelled
+
+**Keyboard-based Selection:**
+5. **Given** an image is displayed, **When** user selects Edit > Crop menu item, **Then** crop markers appear in the editing window showing the current selection region
+6. **Given** crop markers are visible, **When** user presses arrow keys (Up/Down/Left/Right), **Then** the entire crop region moves in that direction
+7. **Given** crop markers are visible, **When** user presses Shift+Up/Down arrows, **Then** the vertical (height) dimension of the crop region increases/decreases
+8. **Given** crop markers are visible, **When** user presses Shift+Left/Right arrows, **Then** the horizontal (width) dimension of the crop region increases/decreases
+9. **Given** crop markers are visible, **When** user presses Enter, **Then** the image is cropped to the marked region
+10. **Given** crop markers are visible, **When** user presses Escape, **Then** the crop markers are cancelled and removed
 
 ---
 

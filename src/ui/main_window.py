@@ -106,10 +106,15 @@ class MainWindow(QMainWindow):
         self._image_viewer = ImageViewer()
         self.setCentralWidget(self._image_viewer)
 
+        # Connect crop signals from image viewer
+        self._image_viewer.crop_requested.connect(self._handle_crop_requested)
+        self._image_viewer.crop_cancelled.connect(self._handle_crop_cancelled)
+
     def _connect_signals(self) -> None:
         """Connect menu actions to handlers."""
         self.action_open.triggered.connect(self._handle_open_file)
         self.action_save_as.triggered.connect(self._handle_save_as)
+        self.action_crop.triggered.connect(self._handle_crop)
         self.action_revert.triggered.connect(self._handle_revert)
         self.action_resize.triggered.connect(self._handle_resize)
 
@@ -224,6 +229,7 @@ class MainWindow(QMainWindow):
 
         # Enable actions when image is loaded
         self.action_save_as.setEnabled(has_image)
+        self.action_crop.setEnabled(has_image)
         self.action_resize.setEnabled(has_image)
 
         # Enable revert only when there are unsaved changes
@@ -371,6 +377,54 @@ class MainWindow(QMainWindow):
             show_error_dialog(
                 self, "Cannot Revert Image", "Failed to revert to original image.", f"Error: {e}"
             )
+
+    def _handle_crop(self) -> None:
+        """Handle Edit > Crop action to activate crop mode."""
+        if not self._editor.has_image():
+            return
+
+        # Activate crop mode in image viewer
+        self._image_viewer.start_crop_mode()
+        self.update_status(
+            "Select crop region with mouse or keyboard "
+            "(Arrow keys to move, Shift+Arrow to resize, Enter to apply, Esc to cancel)"
+        )
+
+    def _handle_crop_requested(self, x: int, y: int, width: int, height: int) -> None:
+        """Handle crop request from image viewer.
+
+        Args:
+            x: X coordinate of crop region
+            y: Y coordinate of crop region
+            width: Width of crop region
+            height: Height of crop region
+        """
+        try:
+            # Apply crop to editor
+            self._editor.crop(x=x, y=y, width=width, height=height)
+
+            # Refresh display
+            self._display_current_image()
+
+            # Update UI state
+            self._update_ui_state()
+
+            # Log operation
+            self._logger.info(f"Cropped image to {width}x{height} at ({x}, {y})")
+            self.update_status(f"Image cropped to {width}x{height}px")
+
+        except ValueError as e:
+            self._logger.error(f"Invalid crop parameters: {e}")
+            show_error_dialog(
+                self, "Cannot Crop Image", "The selected crop region is invalid.", str(e)
+            )
+        except Exception as e:
+            self._logger.error(f"Failed to crop image: {e}")
+            show_error_dialog(self, "Cannot Crop Image", "Failed to crop the image.", f"Error: {e}")
+
+    def _handle_crop_cancelled(self) -> None:
+        """Handle crop cancellation from image viewer."""
+        self.update_status("Crop cancelled")
 
     def _handle_resize(self) -> None:
         """Handle Edit > Resize action to resize image."""
