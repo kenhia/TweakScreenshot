@@ -271,9 +271,10 @@ class ImageEditor:
         elif width is None and height is None:
             raise ValueError("Must provide at least one dimension (width or height)")
 
-        # Validate dimensions
+        # Validate dimensions (width and height are guaranteed to be int here)
         from utils.validators import validate_resize_dimensions
 
+        assert width is not None and height is not None
         validate_resize_dimensions(width, height)
 
         # Resize using LANCZOS filter for high quality

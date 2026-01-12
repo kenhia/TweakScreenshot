@@ -112,7 +112,6 @@ class MainWindow(QMainWindow):
         self.action_save_as.triggered.connect(self._handle_save_as)
         self.action_revert.triggered.connect(self._handle_revert)
         self.action_resize.triggered.connect(self._handle_resize)
-        self.action_revert.triggered.connect(self._handle_revert)
 
     def update_status(self, message: str) -> None:
         """Update status bar message.
@@ -383,6 +382,9 @@ class MainWindow(QMainWindow):
         from utils.validators import is_extreme_dimension
 
         current_img = self._editor.get_current_image()
+        if current_img is None:
+            return
+
         current_width = current_img.width
         current_height = current_img.height
 
